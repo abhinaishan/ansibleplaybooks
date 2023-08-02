@@ -1,0 +1,22 @@
+- name: Install Python 2.7.5 and Python 3.4.10 on CentOS/RHEL
+  hosts: aws-instance
+  become: true
+
+  tasks:
+    - name: Clean yum cache and makecache
+      shell: |
+        yum clean all && yum makecache
+    - name: Install EPEL repository (for Python 3)
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Install Python 2.7
+      yum:
+        name: python27
+        state: present
+
+    - name: Install Python 3.4
+      yum:
+        name: python34
+        state: present
