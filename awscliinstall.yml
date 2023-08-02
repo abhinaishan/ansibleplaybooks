@@ -1,0 +1,32 @@
+- name: "Install the AWS CLi"
+  hosts: aws-instance
+  become: true
+  tasks:
+    #- name: uninstall the aws cli
+    #  shell: |
+    #    sudo rm /usr/local/bin/aws
+    #    sudo rm /usr/local/bin/aws_completer
+    #    sudo rm -rf /usr/local/aws-cli
+    - name: Download the AWS CLI ZIP archive
+      shell: "curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip"
+      args:
+        creates: "awscliv2.zip"
+    - name: Extract the AWS CLI files
+      unarchive:
+        src: awscliv2.zip
+        dest: .
+        remote_src: yes
+    - name: Install the AWS CLI
+      shell: "./aws/install"
+    - name: Check if AWS CLI is installed
+      command: "/usr/local/bin/aws --version"
+      register: aws_cli_version
+      ignore_errors: yes
+    - name: Display AWS CLI version if installed
+      debug:
+        msg: "AWS CLI version: {{ aws_cli_version.stdout }}"
+      when: aws_cli_version.rc == 0
+    - name: Display message if AWS CLI is not installed
+      debug:
+        msg: "AWS CLI is not installed"
+      when: aws_cli_version.rc != 0
