@@ -1,0 +1,12 @@
+- name: " Install perl and verify the play"
+  hosts: localhost
+  become: true
+  tasks:
+    - name: install
+      apt:
+        name: perl
+        state: present
+        update_cache: yes
+    - name: show version of perl
+      shell:
+        cmd: perl -v
