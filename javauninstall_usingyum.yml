@@ -1,0 +1,14 @@
+- name: "uninstall the java in RHEL"
+  hosts: aws-instance
+  become: yes
+  tasks:
+    - name: uninstall
+      yum:
+        name: java-1.8.0-openjdk
+        state: absent
+    - name: remove the environmental variable
+      lineinfile:
+        path: /root/.bashrc
+        state: absent
+        regexp: '^export (JAVA_HOME|PATH)=' ##check both JAVA_HOME or PATH and match either to remove the line using absent above line
+      become: yes
