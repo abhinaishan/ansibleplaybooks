@@ -1,0 +1,22 @@
+- name: Install java using yum
+  hosts: aws-instance
+  become: yes
+  tasks:
+    #- name: yum update
+    # yum:
+    #  update_cache: yes
+    - name: install jdk
+      yum:
+         name: java-1.8.0-openjdk
+         state: latest
+    - name: set the environmental variable
+      lineinfile:
+        path:  ~/.bashrc
+        line: |
+          export JAVA_HOME= "{{ JAVA_HOME }}"
+          export PATH= "{{ PATH }}"
+        create: yes
+      become: yes
+    - name: Display Java version
+      shell:
+       cmd: java -version
